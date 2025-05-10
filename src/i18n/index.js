@@ -2,22 +2,23 @@ import { createI18n } from 'vue-i18n';
 
 const messages = {
   en: {
-    title: 'Real-time Salary Calculator',
+    title: 'Real-Time Salary Calculator',
     monthlySalary: 'Monthly Salary',
     workDays: 'Working Days Per Month',
     workHours: 'Working Hours Per Day',
     startWork: 'Start Work',
     continueWork: 'Continue Work',
-    slacking: 'Slacking',
+    slacking: 'Fishing',
     reset: 'Reset',
     todayWage: "Today's Salary",
     workingTime: 'Working Time',
-    slackingTime: 'Slacking Time',
-    slackingEarnings: 'Slacking Earnings',
+    slackingTime: 'Fishing Time',
+    slackingEarnings: 'Fishing Earnings',
     enterMonthlySalary: 'Enter monthly salary',
     enterWorkDays: 'Enter working days',
     enterWorkHours: 'Enter working hours',
     pleaseFillAll: 'Please fill in all required information!',
+    continueWithGitHub: 'Continue With GitHub',
   },
   zh: {
     title: '实时工资计算器',
@@ -36,6 +37,7 @@ const messages = {
     enterWorkDays: '请输入月工作天数',
     enterWorkHours: '请输入每天工作时长',
     pleaseFillAll: '请填写所有必要信息！',
+    continueWithGitHub: ' GitHub 登录',
   },
 };
 

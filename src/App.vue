@@ -19,6 +19,7 @@ export default {
       currentPauseDuration: 0,
       showPrivacy: true,
       currentLocale: 'en',
+      user: null,
     };
   },
   computed: {
@@ -152,6 +153,18 @@ export default {
       this.currentLocale = this.currentLocale === 'en' ? 'zh' : 'en';
       this.$i18n.locale = this.currentLocale;
     },
+    async handleGitHubLogin() {
+      // Mock GitHub 登录
+      try {
+        // 模拟登录成功
+        this.user = {
+          email: 'user@example.com',
+          name: 'GitHub User',
+        };
+      } catch (error) {
+        console.error('Login failed:', error);
+      }
+    },
   },
   mounted() {
     this.createStars();
@@ -169,6 +182,9 @@ export default {
     <div class="stars" ref="starsContainer"></div>
     <div class="container">
       <div class="top-controls">
+        <div class="user-info" v-if="user">
+          {{ user.email }}
+        </div>
         <div class="locale-toggle" @click="toggleLocale">
           {{ currentLocale === 'en' ? '中' : 'En' }}
         </div>
@@ -218,6 +234,15 @@ export default {
         <div class="paused-time">{{ $t('slackingTime') }}：{{ formattedPausedTime }}</div>
         <div class="paused-salary">{{ $t('slackingEarnings') }}：¥{{ maskedPausedSalary }}</div>
       </div>
+      <button class="github-login-btn" @click="handleGitHubLogin" v-if="!user">
+        <svg class="github-icon" viewBox="0 0 24 24" width="24" height="24">
+          <path
+            fill="currentColor"
+            d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"
+          />
+        </svg>
+        {{ $t('continueWithGitHub') }}
+      </button>
     </div>
   </div>
 </template>
@@ -265,7 +290,7 @@ export default {
   position: relative;
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
-  padding: 2rem;
+  padding: 0.5rem 2rem;
   border-radius: 15px;
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
   z-index: 1;
@@ -303,7 +328,7 @@ h1 {
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 label {
@@ -355,21 +380,58 @@ input:disabled {
 }
 
 .start-btn {
-  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  background: linear-gradient(45deg, #000000, #1a1a1a);
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 0 0 1px #ffffff2e;
+}
+
+.start-btn::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.03), transparent);
+  transform: rotate(45deg);
+  animation: shine 3s infinite;
 }
 
 .start-btn.paused {
-  background: linear-gradient(45deg, #ffd93d, #ff6b6b);
+  background: linear-gradient(45deg, #1a1a1a, #000000);
+  color: #ffffff;
 }
 
 .reset-btn {
-  background: linear-gradient(45deg, #6b66ff, #ff6b6b);
+  background: linear-gradient(45deg, #000000, #1a1a1a);
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 0 0 1px #ffffff2e;
+}
+
+.reset-btn::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.03), transparent);
+  transform: rotate(45deg);
+  animation: shine 3s infinite;
 }
 
 .start-btn:hover,
 .reset-btn:hover {
-  transform: scale(1.02);
-  filter: brightness(1.1);
+  transform: scale(1.01);
+  background: linear-gradient(45deg, #1a1a1a, #2a2a2a);
+  color: #ffffff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.05);
 }
 
 .start-btn:disabled,
@@ -378,48 +440,67 @@ input:disabled {
   cursor: not-allowed;
   transform: none;
   filter: none;
+  background: linear-gradient(45deg, #000000, #0a0a0a);
+  color: #ffffff;
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) rotate(45deg);
+  }
+  20%,
+  100% {
+    transform: translateX(100%) rotate(45deg);
+  }
 }
 
 .result {
-  margin-top: 2rem;
+  margin-top: 1rem;
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 1rem;
   color: #fff;
 }
 
 .timer {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   text-align: center;
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #fff;
 }
 
 .paused-info {
   margin-top: 1rem;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
+  padding: 0.5rem;
+  /* background: rgba(255, 255, 255, 0.05); */
   border-radius: 8px;
   text-align: center;
 }
 
 .paused-time {
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #ffd93d;
   margin-bottom: 0.5rem;
 }
 
 .paused-salary {
-  font-size: 1.2rem;
+  font-size: 1rem;
   color: #ff6b6b;
 }
 
 .top-controls {
-  position: absolute;
-  top: 0.5rem;
-  right: 0rem;
   display: flex;
-  gap: 1rem;
-  z-index: 2;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
+  /* padding: 20px; */
+  top: 0px;
+  right: 0px;
+  position: absolute;
+}
+
+.user-info {
+  color: var(--accent-a11);
+  font-size: 14px;
 }
 
 .locale-toggle {
@@ -456,5 +537,32 @@ input:disabled {
 
 .eye-icon.eye-closed {
   color: rgba(255, 255, 255, 0.5);
+}
+
+.github-login-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: transparent;
+  color: #ffffffee;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 20px;
+  box-shadow: inset 0 0 0 1px #ffffff2e;
+  transition: all 0.2s ease;
+  margin: 0 auto;
+}
+
+.github-login-btn:hover {
+  background: var(--accent-a3);
+}
+
+.github-icon {
+  width: 20px;
+  height: 20px;
 }
 </style>
